@@ -1,0 +1,22 @@
+{
+  "name": "indigit-pt/moloni-extended",
+  "description": "Plugin for WooCommerce integration with Moloni with Extended Options",
+  "license": "GPL-3.0",
+  "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "Nuno Xavier & Pedro Martins",
+      "email": "support@indigit.pt"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.1",
+    "ext-curl": "*",
+    "ext-mbstring": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Moloni\\": "src"
+    }
+  }
+}
