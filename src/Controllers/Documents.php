@@ -249,7 +249,8 @@ class Documents
 
             $directory = date('Y-m-d');
             $filename = sprintf('%s_invoice.pdf', $this->order->get_id());
-            $path = sprintf('%s/%s', INDIGIT_PLG_DIR_FILES, $directory);
+            $upload_dir = wp_upload_dir();
+            $path = sprintf('%s/%s', trailingslashit($upload_dir['basedir']), $directory);
             !file_exists($path) && mkdir($path, 0777, true);
             $pdfFilename = sprintf('%s/%s', $path, $filename);
             file_put_contents($pdfFilename, $response);
