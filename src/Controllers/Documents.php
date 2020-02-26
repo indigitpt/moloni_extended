@@ -166,7 +166,6 @@ class Documents
 
             $props = $this->mapPropsToValues();
             $insertedDocument = Curl::simple($this->documentType . '/insert', $props);
-            indigit_log('MOLONI INVOICE', $this->order->get_id(), $props); // log
 
             if (!isset($insertedDocument['document_id'])) {
                 throw new Error(sprintf(__('Atenção, houve um erro ao inserir o documento %s'), $this->order->get_order_number()));
@@ -239,7 +238,6 @@ class Documents
         try {
             $pdfURL = Curl::simple('documents/getPDFLink', ['document_id' => $document_id]);
 
-            indigit_log('MOLONI INVOICE', 'INVOICE PDF LINK', $pdfURL);
 
             # Download PDF Url ( returns base64 encode ) : https://www.moloni.pt/downloads/index.php?action=getDownload&h=xxxxxx&d=yyyyyy&e=&i=1
             # Visualizer Page aka Link Given by Moloni : https://www.moloni.pt/downloads/?h=xxxxxx4&d=yyyyyy
@@ -258,9 +256,6 @@ class Documents
 
             update_post_meta($this->order->get_id(), '_moloni_file', sprintf('%s/%s', $directory, $filename));
         } catch (\Exception $e) {
-            indigit_log('MOLONI', $e, [
-                'document_id' => $document_id
-            ]);
         }
 
         return $pdfFilename;
