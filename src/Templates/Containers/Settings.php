@@ -54,7 +54,7 @@
             </tr>
 
             <?php
-            $types = defined('DOCUMENT_TYPE_BY_PAYMENT') ? json_decode(DOCUMENT_TYPE_BY_PAYMENT ?? [], true) : [];
+            $types = defined('DOCUMENT_TYPE_BY_PAYMENT') ? json_decode(DOCUMENT_TYPE_BY_PAYMENT ?? '[]', true) : [];
             foreach (WC()->payment_gateways()->payment_gateways() as $gateway):
                 $selected = array_key_exists($gateway->id, $types) ? $types[$gateway->id] : null;
                 ?>
