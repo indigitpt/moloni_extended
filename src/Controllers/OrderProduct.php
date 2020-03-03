@@ -49,7 +49,7 @@ class OrderProduct
 
     /** @var int */
     private $warehouse_id = 0;
-    
+
     /** @var bool */
     private $hasIVA = false;
 
@@ -107,6 +107,33 @@ class OrderProduct
             }
 
             $this->summary .= $this->getSummaryExtraProductOptions();
+        }
+
+        $meta_data = $this->product->get_formatted_meta_data('');
+        $hidden_order_itemmeta = apply_filters(
+            'woocommerce_hidden_order_itemmeta',
+            array(
+                '_qty',
+                '_tax_class',
+                '_product_id',
+                '_variation_id',
+                '_line_subtotal',
+                '_line_subtotal_tax',
+                '_line_total',
+                '_line_tax',
+                'method_id',
+                'cost',
+                '_reduced_stock',
+            )
+        );
+
+        if ($meta_data) {
+            foreach ($meta_data as $meta_id => $meta) {
+                if (in_array( $meta->key, $hidden_order_itemmeta, true)) {
+                    continue;
+                }
+                $this->summary .= trim($meta->display_key) . ': ' . trim(strip_tags($meta->display_value)) . "\n";
+            }
         }
 
         return $this;
@@ -254,7 +281,7 @@ class OrderProduct
     private function setTax($taxRate)
     {
         $moloniTax = Tools::getTaxFromRate((float)$taxRate);
-        
+
         $tax = [];
         $tax['tax_id'] = $moloniTax['tax_id'];
         $tax['value'] = $taxRate;
