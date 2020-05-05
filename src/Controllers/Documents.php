@@ -218,6 +218,23 @@ class Documents
             }
 
             do_action('moloni_order_processed', [$this->order->get_id(), $pdf]);
+
+            if (defined('EMAIL_SEND_INTERNAL')) {
+                $subject = sprintf('Envio de Factura Documentos (%s Venda #%s)', get_option(INDIGIT_CTT_REFERENCE_PREFIX), $this->order->get_id());
+
+                $replace = [
+                    '{{nome_empresa}}' => get_option(INDIGIT_CTT_REFERENCE_PREFIX),
+                    '{{data_hoje}}' => date('Y-m-d'),
+                    '{{nome_cliente}}' => $this->order->get_billing_first_name() . ' ' . $this->order->get_billing_last_name(),
+                    '{{documento_numero}}' => $this->order->get_id(),
+                    '{{link}}' => esc_url(admin_url(sprintf('post.php?post=%s&action=edit', $this->order->get_id()))),
+                ];
+                $message = str_replace(array_keys($replace), $replace, $this->getEmailTemplate());
+
+                wp_mail(EMAIL_SEND_INTERNAL, $subject, $message, ['Content-Type: text/html; charset=UTF-8'], array_filter([$pdf]));
+
+                $this->order->add_order_note(__('Documentos enviados para: ' . EMAIL_SEND_INTERNAL));
+            }
         } catch (Error $error) {
             $this->document_id = 0;
             $this->error = $error;
@@ -588,5 +605,58 @@ class Documents
         }
 
         return $typeName;
+    }
+
+    /**
+     * Get email template
+     *
+     * @return string
+     */
+    protected function getEmailTemplate()
+    {
+        $template =<<<EOL
+<table width="800" border="0" cellspacing="0" cellpadding="0" align="center" style="color:#333333;font-family:Arial, Helvetica, sans-serif, Tahoma, Verdana, Geneva;font-size:12px;line-height:150%;">
+	<tbody>
+		<tr>
+			<td style="text-align:left;padding:10px 0px 10px 10px;border-bottom:1px solid #dddddd;">
+				<table width="100%" cellpadding="0" cellspacing="0" border="0" style="color:#333333;font-family:Arial, Helvetica, sans-serif, Tahoma, Verdana, Geneva;font-size:12px;line-height:150%;">
+					<tbody>
+						<tr>
+							<td style="width:380px;text-align:left;vertical-align:bottom;">
+								{{nome_empresa}}
+							</td>
+							
+							<td style="text-align:right;vertical-align:bottom;font-size:34px;font-family:Arial, Helvetica, sans-serif;color:#81A824;padding:0 10px 10px 0;">
+								<span style="font-size:11px;font-style:italic;color:#999999;display:block;">{{data_hoje}}</span>
+								<span style="font-size:22px;">Documentos em anexo</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:left;padding:10px 0px 10px 0px;">			
+				<table width="100%" border="0" cellspacing="0" cellpadding="0" style="color:#333333;font-family:Arial, Helvetica, sans-serif, Tahoma, Verdana, Geneva;font-size:12px;line-height:150%;">
+					<tbody>
+						<tr>
+							<td style="text-align:left;vertical-align:top;padding:10px 6px 6px 6px;font-family:Arial, Helvetica, sans-serif, Tahoma, Verdana, Geneva;font-size:12px;line-height:150%;">
+								Segue em anexo os documentos para a venda #{{documento_numero}} para o cliente <b>{{nome_cliente}}</b>.<br>
+								<a href="{{link}}">Link directo para a compra</a></br>
+								<p>Com os melhores cumprimentos,<br>{{nome_empresa}}</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="height:40px;">&nbsp;</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+EOL;
+
+        return $template;
     }
 }
