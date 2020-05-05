@@ -4,6 +4,7 @@ namespace Moloni\Hooks;
 
 use Exception;
 use Moloni\Log;
+use Moloni\Model;
 use Moloni\Plugin;
 use Moloni\Start;
 use Moloni\Controllers\Documents;
@@ -20,6 +21,7 @@ class OrderPaid
     public function __construct($parent)
     {
         $this->parent = $parent;
+        Model::defineConfigs();
         $status = defined('DOCUMENT_ORDER_STATUS') ? DOCUMENT_ORDER_STATUS : 'completed';
         add_action('woocommerce_order_status_' . $status, [$this, 'documentCreate']);
     }
