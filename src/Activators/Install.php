@@ -68,6 +68,7 @@ class Install
         $wpdb->query("INSERT INTO `moloni_api_config`(config, description) VALUES('measure_unit', 'Escolha a unidade de medida a usar')");
         $wpdb->query("INSERT INTO `moloni_api_config`(config, description) VALUES('maturity_date', 'Prazo de Pagamento')");
         $wpdb->query("INSERT INTO `moloni_api_config`(config, description) VALUES('document_status', 'Escolha o estado do documento (fechado ou em rascunho)')");
+        $wpdb->query("INSERT INTO `moloni_api_config`(config, description) VALUES('document_order_status', 'Estado da encomenda para gerar factura')");
         $wpdb->query("INSERT INTO `moloni_api_config`(config, description) VALUES('document_type', 'Escolha o tipo de documentos que deseja emitir')");
         $wpdb->query("INSERT INTO `moloni_api_config`(config, description) VALUES('client_prefix', 'Prefixo da referência do cliente')");
         $wpdb->query("INSERT INTO `moloni_api_config`(config, description) VALUES('product_prefix', 'Prefixo da referência do produto')");

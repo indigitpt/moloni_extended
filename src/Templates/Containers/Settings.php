@@ -111,6 +111,19 @@
 
             <tr>
                 <th>
+                    <label for="document_order_status"><?= __('Estado da encomenda para gerar factura') ?></label>
+                </th>
+                <td>
+                    <select id="document_order_status" name='opt[document_order_status]' class='inputOut'>
+                        <option value='processing' <?= (DOCUMENT_ORDER_STATUS == 'processing' ? 'selected' : '') ?>><?= __('Processamento') ?></option>
+                        <option value='completed' <?= (DOCUMENT_ORDER_STATUS == 'completed' ? 'selected' : '') ?>><?= __('Completa') ?></option>
+                    </select>
+                    <p class='description'><?= __('Obrigatório') ?></p>
+                </td>
+            </tr>
+
+            <tr>
+                <th>
                     <label for="document_set_id"><?= __('Série de documento') ?></label>
                 </th>
                 <td>

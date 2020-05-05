@@ -20,7 +20,8 @@ class OrderPaid
     public function __construct($parent)
     {
         $this->parent = $parent;
-        add_action('woocommerce_order_status_completed', [$this, 'documentCreate']);
+        $status = defined('DOCUMENT_TYPE') ? DOCUMENT_TYPE : 'completed';
+        add_action('woocommerce_order_status_' . $status, [$this, 'documentCreate']);
     }
 
     public function documentCreate($orderId)
