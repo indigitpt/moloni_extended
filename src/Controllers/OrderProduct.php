@@ -124,6 +124,8 @@ class OrderProduct
                 'method_id',
                 'cost',
                 '_reduced_stock',
+                '_wc_cog_item_cost',
+                '_wc_cog_item_total_cost',
             )
         );
 
